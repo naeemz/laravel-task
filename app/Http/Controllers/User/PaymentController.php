@@ -16,6 +16,11 @@ class PaymentController extends Controller
         // get logged in user
         $user = Auth::user();
 
+        // validate if product belongs to user
+        $product = Product::find($request->get('product_id'));
+        if( $user->id != $product->user_id )
+            return abort(404);
+
         // plan can be create in Stripe API account
         // below is product plan ID from Stripe API
         $plan = 'plan_ClLECqLd2pC2xN';
@@ -23,7 +28,6 @@ class PaymentController extends Controller
         $user->newSubscription('main', $plan)->create($stripeToken);
 
         // update product
-        $product = Product::find($request->get('product_id'));
         $product->payment = 1;
         $product->save();
 
@@ -37,13 +41,16 @@ class PaymentController extends Controller
     public function charge(Request $request, $product_id) {
         // user already subscribe
         $user = Auth::user();
-        // charge parameter is in AED fills
+        // validate if product belongs to user
+        $product = Product::find($request->get('product_id'));
+        if( $user->id != $product->user_id )
+            return abort(404);
 
+        // charge parameter is in AED fills
         $charge = $user->charge(1000);
 
         if( $charge->paid ) {
             //
-            $product = Product::find( $product_id );
             $product->payment = 1;
             $product->save();
 

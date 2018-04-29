@@ -16,7 +16,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $products = Product::where('user_id', Auth::user()->id)->latest()->paginate(10);
 
         return view('user.products.index', compact('products'));
     }
@@ -69,7 +69,10 @@ class ProductsController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        // validate if product belongs to current user
+        if( $product->user_id != Auth::user()->id )
+            return abort(404);
+
         return view('user.products.show', compact('product'));
     }
 
@@ -81,7 +84,10 @@ class ProductsController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        // validate if product belongs to current user
+        if( $product->user_id != Auth::user()->id )
+            return abort(500);
+
         return view('user.products.edit', compact('product'));
     }
 
@@ -98,6 +104,10 @@ class ProductsController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
+
+        // validate if product belongs to current user
+        if( $product->user_id != Auth::user()->id )
+            return abort(500);
 
         // update data
         $product->title = $request->get('title');
@@ -125,6 +135,10 @@ class ProductsController extends Controller
     {
         // never use below function in web applications
         //$product->delete();
+
+        // validate if product belongs to current user
+        if( $product->user_id != Auth::user()->id )
+            return abort(500);
 
         // instead use below
         $product->is_active = 0;
