@@ -18,4 +18,12 @@ class HomeController extends Controller
 
         return view('home', compact('products'));
     }
+
+    public function ad_show( $slug ) {
+        $ad = Product::where('title', str_slug($slug))->first();
+
+        dd($ad);
+        // return
+        return view('front.show');
+    }
 }

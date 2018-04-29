@@ -33,4 +33,7 @@ Route::name('user.')->prefix('user')->middleware('auth')->group(function () {
     // User Ads
     Route::get('products/payment/{id}', 'User\ProductsController@payment')->name('products.payment');
     Route::resource('products', 'User\ProductsController', ['names' => 'products']);
+    // Payment
+    Route::post('first-payment', 'User\PaymentController@first_payment')->name('first-payment');
+    Route::get('ads-charge/{id}', 'User\PaymentController@charge')->name('ads-charge');
 });

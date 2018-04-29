@@ -44,11 +44,12 @@
                                 <td>{{ date('Y-m-d', strtotime($product->created_at)) }}</td>
                                 <td>
                                     <form action="{{ route('user.products.destroy',$product->id) }}" method="POST">
-                                        @if( $product->payment == 1 )
-                                            <a class="btn btn-warning" href="{{ route('user.products.payment',$product->id) }}">Cancel Payment</a>
+                                        @if( Auth::user()->stripe_id != '' )
+                                            <a class="btn btn-success" href="{{ route('user.ads-charge',$product->id) }}">Pay</a>
                                         @else
-                                            <a class="btn btn-success" href="{{ route('user.products.payment',$product->id) }}">Pay</a>
+                                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" onclick="$('#product_id').val('{{$product->id}}');">Pay</button>
                                         @endif
+
                                         <a class="btn btn-info" href="{{ route('user.products.show',$product->id) }}">Show</a>
                                         <a class="btn btn-primary" href="{{ route('user.products.edit',$product->id) }}">Edit</a>
                                         @csrf
@@ -72,5 +73,74 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
+
+@if( Auth::user()->stripe_id == '' )
+
+    @section('js')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{asset('templates/user/js/stripe.js')}}"></script>
+    @endsection
+
+    <style>
+        .StripeElement {
+            background-color: white;
+            height: 40px;
+            padding: 10px 12px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            box-shadow: 0 1px 3px 0 #e6ebf1;
+            -webkit-transition: box-shadow 150ms ease;
+            transition: box-shadow 150ms ease;
+        }
+
+        .StripeElement--focus {
+            box-shadow: 0 1px 3px 0 #cfd7df;
+        }
+
+        .StripeElement--invalid {
+            border-color: #fa755a;
+        }
+
+        .StripeElement--webkit-autofill {
+            background-color: #fefde5 !important;
+        }
+    </style>
+
+        <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Subscribe</h4>
+                    </div>
+                    <form action="{{route('user.first-payment')}}" method="post" id="payment-form">
+                        <div class="modal-body">
+                            {!! csrf_field() !!}
+                            <input type="hidden" name="stripe_token" id="stripe_token" />
+                            <input type="hidden" name="product_id" value="" id="product_id" />
+                            <div class="form-row">
+                                <label for="card-element">
+                                    Credit or debit card
+                                </label>
+                                <div id="card-element">
+                                    <!-- A Stripe Element will be inserted here. -->
+                                </div>
+
+                                <!-- Used to display form errors. -->
+                                <div id="card-errors" role="alert"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary pull-right" id="submit-payment">Subscribe & Pay</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+@endif
 
 @endsection

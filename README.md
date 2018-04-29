@@ -14,7 +14,13 @@ Project Setup
     'DB_USERNAME' = 'USERNAME',
     'DB_PASSWORD' = 'PASSWORD',
 ```
-
+   For Stripe Integration update .env:
+   ```
+   STRIPE_KEY=
+   STRIPE_SECRET=
+   CURRENCY=aed
+   CURRENCY_SYMBOL=AED
+   ```
  - From the project directory,
    1. `composer install`
 
