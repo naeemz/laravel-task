@@ -18,7 +18,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text"><a href="{{route('user.products.index')}}">Total Products</a></span>
-                        <span class="info-box-number"><a href="{{route('user.products.index')}}">{{$products->count()}}</a></span>
+                        <span class="info-box-number"><a href="{{route('user.products.index')}}">{{Auth::user()->products()->count()}}</a></span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -31,7 +31,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text"><a href="{{route('user.products.index')}}">Paid Products</a></span>
-                        <span class="info-box-number"><a href="{{route('user.products.index')}}">{{$products_paid->count()}}</a></span>
+                        <span class="info-box-number"><a href="{{route('user.products.index')}}">{{Auth::user()->products()->where('payment', 1)->count()}}</a></span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -45,7 +45,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text"><a href="{{route('user.products.index')}}">Unaid Products</a></span>
-                        <span class="info-box-number"><a href="{{route('user.products.index')}}">{{$products_unpaid->count()}}</a></span>
+                        <span class="info-box-number"><a href="{{route('user.products.index')}}">{{Auth::user()->products()->where('payment', 0)->count()}}</a></span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>

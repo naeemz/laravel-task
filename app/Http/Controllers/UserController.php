@@ -11,11 +11,8 @@ use Carbon\Carbon;
 class UserController extends Controller
 {
     public function dashboard() {
-        $products       = Product::all();
-        $products_paid  = Product::where('payment', 1)->get();
-        $products_unpaid= Product::where('payment', 0)->get();
-
-        return view('user.dashboard', compact('products', 'products_paid', 'products_unpaid'));
+        //
+        return view('user.dashboard');
     }
 
     public function profile_edit() {
